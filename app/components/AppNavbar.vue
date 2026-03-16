@@ -106,6 +106,9 @@ function getUserInitials(): string {
 const ROUTE_LABELS: Record<string, string> = {
   'dashboard':    'Dashboard',
   'master-asset': 'Master Aset',
+  'kategori':     'Kategori',
+  'barang':       'Barang',
+  'supplier':     'Supplier',
   'create':       'Tambah',
   'edit':         'Edit',
   'pembelian':    'Pembelian',
@@ -115,10 +118,9 @@ const ROUTE_LABELS: Record<string, string> = {
   'maintenance':  'Maintenance',
   'depresiasi':   'Depresiasi',
   'laporan':      'Laporan',
-  'kategori':     'Kategori',
-  'lokasi':       'Lokasi',
   'unit-kantor':  'Unit Kantor',
   'pengaturan':   'Pengaturan',
+  'aset':         'Daftar Aset',
 }
 
 // ── Build breadcrumbs from route.path ─────────────────────────

@@ -61,13 +61,10 @@ import {
   type MasterItem,
   type KategoriItem,
 } from '@/services/masterAssetService'
-import { useAuthStore } from '@/stores/useAuthStore'
 import MasterAssetTable from '@/components/features/master-asset/MasterAssetTable.vue'
 import ConfirmDialog    from '@/components/features/master-asset/ConfirmDialog.vue'
 
 definePageMeta({ layout: 'default' })
-
-const authStore = useAuthStore()
 
 // ── Table state ───────────────────────────────────────────────
 const items        = ref<MasterItem[]>([])
@@ -124,7 +121,7 @@ async function fetchData() {
   loading.value = true
   error.value   = null
   try {
-    const response = await masterAssetService.getItems(authStore.activeUnitId)
+    const response = await masterAssetService.getItems()
     if (response.success) items.value = response.data
   } catch (err) {
     error.value = 'Gagal memuat data aset. Silakan coba lagi.'

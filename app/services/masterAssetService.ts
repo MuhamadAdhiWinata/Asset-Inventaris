@@ -8,7 +8,6 @@ export type StatusAset = 'Aktif' | 'Tidak Aktif' | 'Dijual' | 'Dalam Perbaikan'
 
 export interface MasterItem {
   id: number
-  unitId: number          // ← terikat unit kantor
   kodeAset: string
   namaAset: string
   lokasi: string
@@ -23,7 +22,6 @@ export interface MasterItem {
 }
 
 export interface MasterItemFormData {
-  unitId: number
   kodeAset: string
   namaAset: string
   lokasi: string
@@ -62,77 +60,121 @@ export interface MasterAssetResponse {
 }
 
 // ============================================================
-// MOCK DATA — tersebar di 2 unit
-// unit 1 = Unit Kantor A, unit 2 = Unit Kantor B
+// MOCK DATA
 // ============================================================
 
 const mockItems: MasterItem[] = [
-  // ── Unit Kantor A (unitId: 1) ─────────────────────────────
   {
-    id: 1, unitId: 1,
-    kodeAset: 'KOM-001', namaAset: 'Laptop Dell Latitude 5520',
-    lokasi: 'Ruang IT', kategori: 'Komputer & IT', subKategori: 'Laptop', satuan: 'Unit',
-    hargaPerolehan: 15000000, akumulasiDepresiasi: 281250, nilaiBuku: 14718750,
-    tanggalPerolehan: '2023-01-15', status: 'Aktif',
+    id: 1,
+    kodeAset: 'KOM-001',
+    namaAset: 'Laptop Dell Latitude 5520',
+    lokasi: 'Ruang IT',
+    kategori: 'Komputer & IT',
+    subKategori: 'Laptop',
+    satuan: 'Unit',
+    hargaPerolehan: 15000000,
+    akumulasiDepresiasi: 281250,
+    nilaiBuku: 14718750,
+    tanggalPerolehan: '2023-01-15',
+    status: 'Aktif',
   },
   {
-    id: 2, unitId: 1,
-    kodeAset: 'KOM-002', namaAset: 'PC Desktop HP ProDesk',
-    lokasi: 'Ruang Keuangan', kategori: 'Komputer & IT', subKategori: 'Desktop', satuan: 'Unit',
-    hargaPerolehan: 12000000, akumulasiDepresiasi: 0, nilaiBuku: 12000000,
-    tanggalPerolehan: '2022-06-20', status: 'Aktif',
+    id: 2,
+    kodeAset: 'KOM-002',
+    namaAset: 'PC Desktop HP ProDesk',
+    lokasi: 'Ruang Keuangan',
+    kategori: 'Komputer & IT',
+    subKategori: 'Desktop',
+    satuan: 'Unit',
+    hargaPerolehan: 12000000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 12000000,
+    tanggalPerolehan: '2022-06-20',
+    status: 'Aktif',
   },
   {
-    id: 3, unitId: 1,
-    kodeAset: 'FUR-001', namaAset: 'Meja Kerja Direktur',
-    lokasi: 'Ruang Direktur', kategori: 'Furniture', subKategori: 'Meja', satuan: 'Unit',
-    hargaPerolehan: 8500000, akumulasiDepresiasi: 0, nilaiBuku: 0,
-    tanggalPerolehan: '2021-03-10', status: 'Dijual',
+    id: 3,
+    kodeAset: 'FUR-001',
+    namaAset: 'Meja Kerja Direktur',
+    lokasi: 'Ruang Direktur',
+    kategori: 'Furniture',
+    subKategori: 'Meja',
+    satuan: 'Unit',
+    hargaPerolehan: 8500000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 0,
+    tanggalPerolehan: '2021-03-10',
+    status: 'Dijual',
   },
   {
-    id: 4, unitId: 1,
-    kodeAset: 'GDG-001', namaAset: 'Gedung Kantor Utama',
-    lokasi: 'Jl. Sudirman No. 1', kategori: 'Gedung & Bangunan', subKategori: 'Gedung', satuan: 'Unit',
-    hargaPerolehan: 5000000000, akumulasiDepresiasi: 0, nilaiBuku: 5000000000,
-    tanggalPerolehan: '2015-01-01', status: 'Aktif',
+    id: 4,
+    kodeAset: 'FUR-002',
+    namaAset: 'Kursi Ergonomis Herman Miller',
+    lokasi: 'Ruang Staff',
+    kategori: 'Furniture',
+    subKategori: 'Kursi',
+    satuan: 'Unit',
+    hargaPerolehan: 12000000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 12000000,
+    tanggalPerolehan: '2022-08-15',
+    status: 'Aktif',
   },
   {
-    id: 5, unitId: 1,
-    kodeAset: 'KOM-003', namaAset: 'Server Dell PowerEdge',
-    lokasi: 'Ruang Server', kategori: 'Komputer & IT', subKategori: 'Server', satuan: 'Unit',
-    hargaPerolehan: 85000000, akumulasiDepresiasi: 0, nilaiBuku: 85000000,
-    tanggalPerolehan: '2021-06-01', status: 'Dalam Perbaikan',
-  },
-
-  // ── Unit Kantor B (unitId: 2) ─────────────────────────────
-  // Sengaja ada nama lokasi sama ("Ruang IT", "Ruang Kerja") untuk buktikan isolasi
-  {
-    id: 6, unitId: 2,
-    kodeAset: 'KOM-001', namaAset: 'Laptop Lenovo ThinkPad',
-    lokasi: 'Ruang IT', kategori: 'Komputer & IT', subKategori: 'Laptop', satuan: 'Unit',
-    hargaPerolehan: 13000000, akumulasiDepresiasi: 0, nilaiBuku: 13000000,
-    tanggalPerolehan: '2023-03-10', status: 'Aktif',
+    id: 5,
+    kodeAset: 'GDG-001',
+    namaAset: 'Gedung Kantor Utama',
+    lokasi: 'Jl. Sudirman No. 123',
+    kategori: 'Gedung & Bangunan',
+    subKategori: 'Gedung',
+    satuan: 'Unit',
+    hargaPerolehan: 5000000000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 5000000000,
+    tanggalPerolehan: '2015-01-01',
+    status: 'Aktif',
   },
   {
-    id: 7, unitId: 2,
-    kodeAset: 'FUR-001', namaAset: 'Kursi Ergonomis Herman Miller',
-    lokasi: 'Ruang Kerja', kategori: 'Furniture', subKategori: 'Kursi', satuan: 'Unit',
-    hargaPerolehan: 12000000, akumulasiDepresiasi: 0, nilaiBuku: 12000000,
-    tanggalPerolehan: '2022-08-15', status: 'Aktif',
+    id: 6,
+    kodeAset: 'ELK-001',
+    namaAset: 'AC Daikin 2 PK',
+    lokasi: 'Ruang Meeting',
+    kategori: 'Elektronik',
+    subKategori: 'AC',
+    satuan: 'Unit',
+    hargaPerolehan: 8000000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 8000000,
+    tanggalPerolehan: '2023-05-20',
+    status: 'Aktif',
   },
   {
-    id: 8, unitId: 2,
-    kodeAset: 'ELK-001', namaAset: 'AC Daikin 2 PK',
-    lokasi: 'Ruang Meeting', kategori: 'Elektronik', subKategori: 'AC', satuan: 'Unit',
-    hargaPerolehan: 8000000, akumulasiDepresiasi: 0, nilaiBuku: 8000000,
-    tanggalPerolehan: '2023-05-20', status: 'Aktif',
+    id: 7,
+    kodeAset: 'KDR-001',
+    namaAset: 'Toyota Avanza',
+    lokasi: 'Parkir Kantor',
+    kategori: 'Kendaraan',
+    subKategori: 'Mobil',
+    satuan: 'Unit',
+    hargaPerolehan: 220000000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 220000000,
+    tanggalPerolehan: '2022-01-10',
+    status: 'Aktif',
   },
   {
-    id: 9, unitId: 2,
-    kodeAset: 'KDR-001', namaAset: 'Toyota Avanza',
-    lokasi: 'Parkir Kantor', kategori: 'Kendaraan', subKategori: 'Mobil', satuan: 'Unit',
-    hargaPerolehan: 220000000, akumulasiDepresiasi: 0, nilaiBuku: 220000000,
-    tanggalPerolehan: '2022-01-10', status: 'Aktif',
+    id: 8,
+    kodeAset: 'KOM-003',
+    namaAset: 'Server Dell PowerEdge',
+    lokasi: 'Ruang Server',
+    kategori: 'Komputer & IT',
+    subKategori: 'Server',
+    satuan: 'Unit',
+    hargaPerolehan: 85000000,
+    akumulasiDepresiasi: 0,
+    nilaiBuku: 85000000,
+    tanggalPerolehan: '2021-06-01',
+    status: 'Dalam Perbaikan',
   },
 ]
 
@@ -145,18 +187,18 @@ const mockKategori: KategoriItem[] = [
 ]
 
 const mockSubKategori: SubKategoriItem[] = [
-  { id: 1,  name: 'Laptop',    kategoriId: 1 },
-  { id: 2,  name: 'Desktop',   kategoriId: 1 },
-  { id: 3,  name: 'Server',    kategoriId: 1 },
-  { id: 4,  name: 'Printer',   kategoriId: 1 },
-  { id: 5,  name: 'Meja',      kategoriId: 2 },
-  { id: 6,  name: 'Kursi',     kategoriId: 2 },
-  { id: 7,  name: 'Lemari',    kategoriId: 2 },
-  { id: 8,  name: 'Gedung',    kategoriId: 3 },
-  { id: 9,  name: 'AC',        kategoriId: 4 },
-  { id: 10, name: 'Proyektor', kategoriId: 4 },
-  { id: 11, name: 'Mobil',     kategoriId: 5 },
-  { id: 12, name: 'Motor',     kategoriId: 5 },
+  { id: 1,  name: 'Laptop',     kategoriId: 1 },
+  { id: 2,  name: 'Desktop',    kategoriId: 1 },
+  { id: 3,  name: 'Server',     kategoriId: 1 },
+  { id: 4,  name: 'Printer',    kategoriId: 1 },
+  { id: 5,  name: 'Meja',       kategoriId: 2 },
+  { id: 6,  name: 'Kursi',      kategoriId: 2 },
+  { id: 7,  name: 'Lemari',     kategoriId: 2 },
+  { id: 8,  name: 'Gedung',     kategoriId: 3 },
+  { id: 9,  name: 'AC',         kategoriId: 4 },
+  { id: 10, name: 'Proyektor',  kategoriId: 4 },
+  { id: 11, name: 'Mobil',      kategoriId: 5 },
+  { id: 12, name: 'Motor',      kategoriId: 5 },
 ]
 
 const mockSatuan: SatuanItem[] = [
@@ -182,19 +224,16 @@ export class MasterAssetService {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  // unitId: null  → admin pusat/super admin, kembalikan semua
-  // unitId: number → admin unit, hanya unit miliknya
-  async getItems(unitId: number | null): Promise<MasterAssetResponse> {
+  // Ketika pakai API nanti, ganti isi method ini saja dengan $fetch
+  async getItems(): Promise<MasterAssetResponse> {
     await this.delay()
-    const data = unitId !== null
-      ? _store.filter(i => i.unitId === unitId)
-      : [..._store]
-    return { success: true, data, total: data.length, page: 1, limit: data.length }
-  }
-
-  async getItemById(id: number): Promise<MasterItem | null> {
-    await this.delay()
-    return _store.find(i => i.id === id) ?? null
+    return {
+      success: true,
+      data: [..._store],
+      total: _store.length,
+      page: 1,
+      limit: _store.length,
+    }
   }
 
   async getCategories(): Promise<KategoriItem[]> {
@@ -212,9 +251,27 @@ export class MasterAssetService {
     return [...mockSatuan]
   }
 
+  async getItemById(id: number): Promise<MasterItem | null> {
+    await this.delay()
+    return _store.find(i => i.id === id) ?? null
+  }
+
   async createItem(data: MasterItemFormData): Promise<MasterItem> {
     await this.delay()
-    const newItem: MasterItem = { id: _nextId++, ...data }
+    const newItem: MasterItem = {
+      id: _nextId++,
+      kodeAset: data.kodeAset,
+      namaAset: data.namaAset,
+      lokasi: data.lokasi,
+      kategori: data.kategori,
+      subKategori: data.subKategori,
+      satuan: data.satuan,
+      hargaPerolehan: data.hargaPerolehan,
+      akumulasiDepresiasi: data.akumulasiDepresiasi,
+      nilaiBuku: data.nilaiBuku,
+      tanggalPerolehan: data.tanggalPerolehan,
+      status: data.status,
+    }
     _store.unshift(newItem)
     return newItem
   }
@@ -252,13 +309,14 @@ export function formatRupiah(value: number): string {
 
 export function formatTanggal(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('id-ID', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   })
 }
 
-export function emptyForm(unitId: number | null = null): MasterItemFormData {
+export function emptyForm(): MasterItemFormData {
   return {
-    unitId: unitId ?? 0,
     kodeAset: '',
     namaAset: '',
     lokasi: '',

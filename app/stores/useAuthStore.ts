@@ -10,6 +10,10 @@ export type Permission =
   | 'asset.create'
   | 'asset.edit'
   | 'asset.delete'
+  | 'aset.view'
+  | 'aset.create'
+  | 'aset.edit'
+  | 'aset.delete'
   // Transaksi
   | 'transaction.view'
   | 'transaction.create'

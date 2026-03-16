@@ -1,43 +1,29 @@
-<!-- pages/unit-kantor/index.vue -->
+<!-- pages/supplier/index.vue -->
 <template>
   <main class="p-4 md:px-6">
 
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b pb-4 mb-4">
       <div>
-        <h1 class="text-xl font-bold tracking-tight">Unit Kantor</h1>
-        <p class="text-muted-foreground text-sm mt-1">
-          Kelola unit kantor. Setiap unit memiliki data aset dan transaksi yang terisolasi.
-        </p>
+        <h1 class="text-xl font-bold tracking-tight">Supplier</h1>
+        <p class="text-muted-foreground text-sm mt-1">Kelola data vendor dan pemasok aset.</p>
       </div>
       <button
-        v-if="authStore.can('unit.manage')"
-        @click="navigateTo('/unit-kantor/create')"
+        @click="navigateTo('/supplier/create')"
         class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4"
       >
         <PlusIcon class="mr-2 h-4 w-4" />
-        Tambah Unit
+        Tambah Supplier
       </button>
     </div>
 
-    <!-- Info banner untuk yang view-only -->
-    <div
-      v-if="authStore.can('unit.view') && !authStore.can('unit.manage')"
-      class="flex items-center gap-3 p-3 mb-4 rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900/50 dark:bg-blue-900/10"
-    >
-      <InfoIcon class="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-      <p class="text-xs text-blue-700 dark:text-blue-400">
-        Anda hanya dapat melihat daftar unit kantor. Untuk mengelola unit diperlukan akses <span class="font-medium">unit.manage</span>.
-      </p>
-    </div>
-
-    <UnitKantorTable
+    <SupplierTable
       :items="paginatedItems"
       :loading="loading"
       :error="error"
       :current-page="currentPage"
       :total-items="filteredItems.length"
       :items-per-page="itemsPerPage"
-      @edit="(item) => authStore.can('unit.manage') && navigateTo(`/unit-kantor/${item.id}/edit`)"
+      @edit="(item) => navigateTo(`/supplier/${item.id}/edit`)"
       @delete="openDelete"
       @page-change="handlePageChange"
       @filter-change="handleFilterChange"
@@ -46,8 +32,8 @@
 
     <ConfirmDialog
       :is-open="deleteDialogOpen"
-      title="Hapus Unit Kantor"
-      :description="`Apakah Anda yakin ingin menghapus unit &quot;${itemToDelete?.nama}&quot;? Semua user yang terikat unit ini perlu diupdate.`"
+      title="Hapus Supplier"
+      :description="`Apakah Anda yakin ingin menghapus supplier &quot;${itemToDelete?.nama}&quot;? Tindakan ini tidak dapat dibatalkan.`"
       :loading="deleting"
       @confirm="handleConfirmDelete"
       @cancel="deleteDialogOpen = false"
@@ -57,21 +43,18 @@
 </template>
 
 <script setup lang="ts">
-import { InfoIcon, PlusIcon } from 'lucide-vue-next'
-import { unitKantorService, type UnitKantor } from '@/services/unitKantorService'
-import { useAuthStore } from '@/stores/useAuthStore'
-import UnitKantorTable from '@/components/features/unit-kantor/UnitKantorTable.vue'
-import ConfirmDialog   from '@/components/features/unit-kantor/ConfirmDialog.vue'
+import { PlusIcon } from 'lucide-vue-next'
+import { supplierService, type Supplier } from '@/services/supplierService'
+import SupplierTable from '@/components/features/supplier/SupplierTable.vue'
+import ConfirmDialog from '@/components/features/supplier/ConfirmDialog.vue'
 
 definePageMeta({
   layout: 'default',
   middleware: ['permission'],
-  requiredPermission: 'unit.view',
+  requiredPermission: 'master.view',
 })
 
-const authStore = useAuthStore()
-
-const items        = ref<UnitKantor[]>([])
+const items        = ref<Supplier[]>([])
 const loading      = ref(true)
 const error        = ref<string | null>(null)
 const currentPage  = ref(1)
@@ -80,15 +63,13 @@ const itemsPerPage = 10
 const activeFilters = ref({ search: '', status: 'Semua' })
 
 const deleteDialogOpen = ref(false)
-const itemToDelete     = ref<UnitKantor | null>(null)
+const itemToDelete     = ref<Supplier | null>(null)
 const deleting         = ref(false)
 
 const filteredItems = computed(() =>
   items.value.filter(item => {
     const q = activeFilters.value.search.toLowerCase()
-    const matchSearch = !q ||
-      item.kode.toLowerCase().includes(q) ||
-      item.nama.toLowerCase().includes(q)
+    const matchSearch = !q || item.kode.toLowerCase().includes(q) || item.nama.toLowerCase().includes(q)
     const matchStatus = activeFilters.value.status === 'Semua' || item.status === activeFilters.value.status
     return matchSearch && matchStatus
   })
@@ -103,10 +84,10 @@ async function fetchData() {
   loading.value = true
   error.value   = null
   try {
-    const res = await unitKantorService.getItems()
+    const res = await supplierService.getItems()
     if (res.success) items.value = res.data
   } catch (err) {
-    error.value = 'Gagal memuat data unit kantor. Silakan coba lagi.'
+    error.value = 'Gagal memuat data supplier. Silakan coba lagi.'
   } finally {
     loading.value = false
   }
@@ -121,8 +102,7 @@ function handleFilterChange(filters: typeof activeFilters.value) {
 
 function handlePageChange(page: number) { currentPage.value = page }
 
-function openDelete(item: UnitKantor) {
-  if (!authStore.can('unit.manage')) return
+function openDelete(item: Supplier) {
   itemToDelete.value     = item
   deleteDialogOpen.value = true
 }
@@ -131,7 +111,7 @@ async function handleConfirmDelete() {
   if (!itemToDelete.value) return
   deleting.value = true
   try {
-    await unitKantorService.deleteItem(itemToDelete.value.id)
+    await supplierService.deleteItem(itemToDelete.value.id)
     deleteDialogOpen.value = false
     itemToDelete.value     = null
     await fetchData()

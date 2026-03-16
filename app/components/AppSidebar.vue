@@ -142,16 +142,21 @@ import {
 } from '@/components/ui/tooltip'
 import {
   ArrowLeftRight,
+  Book,
   Box,
   Building2,
   ChevronRight,
   FileText,
   LayoutDashboard,
+  PackageIcon,
   PackageMinus,
   PackagePlus,
   Settings,
+  TagIcon,
   Trash2,
   TrendingDown,
+  TruckIcon,
+  Warehouse,
   Wrench,
 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -179,8 +184,19 @@ const navMain = computed<NavItem[]>(() => {
       icon: LayoutDashboard,
     },
     {
-      title: 'Master Aset',
-      url: '/master-asset',
+      title: 'Master Data',
+      url: '/#',
+      icon: Warehouse,
+      permission: 'master.view',
+      items: [
+        { title: 'Kategori',  url: '/kategori',  icon: TagIcon },
+        { title: 'Barang',  url: '/barang',  icon: PackageIcon },
+        { title: 'Suplier',  url: '/supplier',  icon: TruckIcon },
+      ]
+    },
+    {
+      title: 'Aset',
+      url: '/aset',
       icon: Box,
       permission: 'asset.view',
     },
