@@ -200,6 +200,31 @@ export class TransaksiService {
     return _pembelian.find(p => p.transaksiId === transaksiId) ?? null
   }
 
+  async getTransferDetail(transaksiId: number): Promise<TrxTransfer | null> {
+    await this.delay()
+    return _transfer.find(t => t.transaksiId === transaksiId) ?? null
+  }
+
+  async getPenjualanDetail(transaksiId: number): Promise<TrxPenjualan | null> {
+    await this.delay()
+    return _penjualan.find(p => p.transaksiId === transaksiId) ?? null
+  }
+
+  async getDisposalDetail(transaksiId: number): Promise<TrxDisposal | null> {
+    await this.delay()
+    return _disposal.find(d => d.transaksiId === transaksiId) ?? null
+  }
+
+  async getMaintenanceDetail(transaksiId: number): Promise<TrxMaintenance | null> {
+    await this.delay()
+    return _maintenance.find(m => m.transaksiId === transaksiId) ?? null
+  }
+
+  async getDepresiasiDetail(transaksiId: number): Promise<TrxDepresiasi | null> {
+    await this.delay()
+    return _depresiasi.find(d => d.transaksiId === transaksiId) ?? null
+  }
+
   async getMaintenanceAktif(unitId: number | null): Promise<TrxMaintenance[]> {
     await this.delay()
     const aktif = _maintenance.filter(m => m.status === 'Dalam Perbaikan')
