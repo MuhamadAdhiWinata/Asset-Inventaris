@@ -262,7 +262,7 @@ const form  = ref<{ unitId: number | null; periode: string; keterangan: string }
 })
 
 const unitLabel = computed(() => {
-  if (authStore.isUnitScoped) return authStore.user?.unitNama ?? 'Unit saya'
+  if (authStore.isUnitScoped) return authStore.user?.unitName ?? 'Unit saya'
   if (form.value.unitId === null) return 'Semua Unit'
   return unitList.value.find(u => u.id === form.value.unitId)?.nama ?? '—'
 })

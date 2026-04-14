@@ -133,7 +133,8 @@ const MOCK_USERS: Record<string, AuthUser> = {
 
 export const useAuthStore = defineStore('auth', () => {
   // State
-  const user = ref<AuthUser | null>(null)
+  const cookie = useCookie<string | null>('mock_user_key')
+  const user = ref<AuthUser | null>((cookie.value && MOCK_USERS[cookie.value]) || null)
   const isLoggedIn = computed(() => !!user.value)
 
   // Apakah user terikat unit tertentu (bukan admin pusat/super admin)
@@ -163,23 +164,14 @@ export const useAuthStore = defineStore('auth', () => {
     const mockUser = MOCK_USERS[mockUserKey]
     if (!mockUser) return false
     user.value = mockUser
-    // Simulasi simpan ke localStorage (nanti = simpan JWT token)
-    localStorage.setItem('mock_user_key', mockUserKey)
+    // Simulasi simpan ke cookie (nanti = simpan JWT token)
+    cookie.value = mockUserKey
     return true
   }
 
   function logout() {
     user.value = null
-    localStorage.removeItem('mock_user_key')
-  }
-
-  // Restore session dari localStorage saat app load
-  // Nanti diganti: validate JWT token dari localStorage
-  function restoreSession() {
-    const key = localStorage.getItem('mock_user_key')
-    if (key && MOCK_USERS[key]) {
-      user.value = MOCK_USERS[key]
-    }
+    cookie.value = null
   }
 
   return {
@@ -197,6 +189,5 @@ export const useAuthStore = defineStore('auth', () => {
     // Actions
     login,
     logout,
-    restoreSession,
   }
 })

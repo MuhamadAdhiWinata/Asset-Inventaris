@@ -7,7 +7,7 @@
             <CardContent class="py-8">
               <div class="flex flex-col items-center gap-2 text-center pb-6">
                 <div class="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-2">
-                  <img src="../assets/vue.svg" alt="Logo" class="h-10 w-10" />
+                  <Box class="h-10 w-10 text-primary" />
                 </div>
                 <div>
                   <h1 class="text-xl font-bold text-card-foreground">Inventaris Asset</h1>
@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { Eye, EyeOff } from 'lucide-vue-next'
+import { Eye, EyeOff, Box } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'

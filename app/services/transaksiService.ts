@@ -17,7 +17,7 @@ export type JenisTransaksi =
   | 'depresiasi'
 
 export type StatusMaintenance = 'Dalam Perbaikan' | 'Selesai'
-export type JenisMaintenance  = 'preventif' | 'korektif'
+export type JenisMaintenance = 'preventif' | 'korektif'
 
 // ── Header ────────────────────────────────────────────────────
 export interface Transaksi {
@@ -149,7 +149,7 @@ export interface MaintenanceFormData {
 }
 
 export interface DepresiasiFormData {
-  unitId: number      // null = semua unit (admin pusat)
+  unitId: number | null      // null = semua unit (admin pusat)
   periode: string     // YYYY-MM
   keterangan: string
 }
@@ -158,16 +158,16 @@ export interface DepresiasiFormData {
 // IN-MEMORY STORES
 // ============================================================
 
-let _transaksi:    Transaksi[]     = []
-let _pembelian:    TrxPembelian[]  = []
-let _transfer:     TrxTransfer[]   = []
-let _penjualan:    TrxPenjualan[]  = []
-let _disposal:     TrxDisposal[]   = []
-let _maintenance:  TrxMaintenance[]= []
-let _depresiasi:   TrxDepresiasi[] = []
+let _transaksi: Transaksi[] = []
+let _pembelian: TrxPembelian[] = []
+let _transfer: TrxTransfer[] = []
+let _penjualan: TrxPenjualan[] = []
+let _disposal: TrxDisposal[] = []
+let _maintenance: TrxMaintenance[] = []
+let _depresiasi: TrxDepresiasi[] = []
 
-let _nextTrxId  = 1
-let _nextDetId  = 1
+let _nextTrxId = 1
+let _nextDetId = 1
 
 // ============================================================
 // SERVICE CLASS
@@ -255,7 +255,7 @@ export class TransaksiService {
 
     for (let i = 0; i < data.items.length; i++) {
       const item = data.items[i]
-      const m    = meta.itemsMeta[i]
+      const m = meta.itemsMeta[i]
 
       // Guard — seharusnya tidak terjadi jika pemanggil benar
       if (!item || !m) throw new Error(`Item meta index ${i} tidak ditemukan`)
@@ -491,8 +491,8 @@ export class TransaksiService {
       const depresiasi = Math.min(nilaiPeriode, aset.nilaiBuku)
       if (depresiasi <= 0) continue
 
-      const akmBaru    = aset.akmDepresiasi + depresiasi
-      const nilaiBuku  = Math.max(0, aset.hargaPerolehan - akmBaru)
+      const akmBaru = aset.akmDepresiasi + depresiasi
+      const nilaiBuku = Math.max(0, aset.hargaPerolehan - akmBaru)
 
       // Buat header transaksi
       const trx: Transaksi = {
@@ -538,19 +538,19 @@ export const transaksiService = new TransaksiService()
 // ============================================================
 
 export const JENIS_LABEL: Record<JenisTransaksi, string> = {
-  pembelian:   'Pembelian',
-  transfer:    'Transfer',
-  penjualan:   'Penjualan',
-  disposal:    'Disposal',
+  pembelian: 'Pembelian',
+  transfer: 'Transfer',
+  penjualan: 'Penjualan',
+  disposal: 'Disposal',
   maintenance: 'Maintenance',
-  depresiasi:  'Depresiasi',
+  depresiasi: 'Depresiasi',
 }
 
 export const JENIS_CONFIG: Record<JenisTransaksi, { label: string; class: string }> = {
-  pembelian:   { label: 'Pembelian',   class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
-  transfer:    { label: 'Transfer',    class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
-  penjualan:   { label: 'Penjualan',   class: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400' },
-  disposal:    { label: 'Disposal',    class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
+  pembelian: { label: 'Pembelian', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+  transfer: { label: 'Transfer', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
+  penjualan: { label: 'Penjualan', class: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400' },
+  disposal: { label: 'Disposal', class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
   maintenance: { label: 'Maintenance', class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
-  depresiasi:  { label: 'Depresiasi',  class: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' },
+  depresiasi: { label: 'Depresiasi', class: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' },
 }
